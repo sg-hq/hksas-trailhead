@@ -1,0 +1,691 @@
+<title>HKSAS Trailhead</title>
+<style>
+  :root{
+    --bg:#E3E8E5; --surface:#F6F8F6; --surface-2:#EAEEEA;
+    --ink:#16231D; --ink-soft:#4B5A52;
+    --ridge:#1E3A2F; --ember:#B5501F; --gold:#C99A3E;
+    --line:rgba(22,35,29,0.14); --topo:rgba(30,58,47,0.09);
+    --shadow:0 30px 60px -30px rgba(16,27,23,0.35);
+    --font-display:900 1em/1 "Arial Black","Helvetica Neue",Arial,sans-serif;
+    --font-body:1em/1.55 Georgia,"Iowan Old Style","Palatino Linotype","Book Antiqua",serif;
+    --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:"SF Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#101B17; --surface:#172520; --surface-2:#1E2F28;
+      --ink:#E7ECE8; --ink-soft:#A9B7AE;
+      --ridge:#8FBFA3; --ember:#E2814C; --gold:#D9A64B;
+      --line:rgba(231,236,232,0.16); --topo:rgba(143,191,163,0.10);
+      --shadow:0 30px 60px -30px rgba(0,0,0,0.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#101B17; --surface:#172520; --surface-2:#1E2F28;
+    --ink:#E7ECE8; --ink-soft:#A9B7AE;
+    --ridge:#8FBFA3; --ember:#E2814C; --gold:#D9A64B;
+    --line:rgba(231,236,232,0.16); --topo:rgba(143,191,163,0.10);
+    --shadow:0 30px 60px -30px rgba(0,0,0,0.6);
+  }
+  :root[data-theme="light"]{
+    --bg:#E3E8E5; --surface:#F6F8F6; --surface-2:#EAEEEA;
+    --ink:#16231D; --ink-soft:#4B5A52;
+    --ridge:#1E3A2F; --ember:#B5501F; --gold:#C99A3E;
+    --line:rgba(22,35,29,0.14); --topo:rgba(30,58,47,0.09);
+    --shadow:0 30px 60px -30px rgba(16,27,23,0.35);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);
+    -webkit-font-smoothing:antialiased;}
+  .topo-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .shell{position:relative;z-index:1;max-width:480px;margin:0 auto;min-height:100vh;
+    background:var(--bg);box-shadow:var(--shadow);display:flex;flex-direction:column;}
+  @media (max-width:600px){.shell{box-shadow:none;}}
+
+  /* ---------- header ---------- */
+  .appbar{position:relative;padding:22px 20px 16px;overflow:hidden;
+    border-bottom:1px solid var(--line);}
+  .ridge-line{position:absolute;left:0;right:0;bottom:0;width:100%;height:46px;}
+  .ridge-line path{fill:none;stroke:var(--ridge);stroke-width:2;stroke-linecap:round;
+    stroke-linejoin:round;opacity:.55;stroke-dasharray:1;stroke-dashoffset:1;
+    animation:draw 1.6s ease-out .1s forwards;}
+  @keyframes draw{to{stroke-dashoffset:0;}}
+  @media (prefers-reduced-motion:reduce){.ridge-line path{animation:none;stroke-dashoffset:0;}}
+  .eyebrow{margin:0;font:700 11px/1 var(--font-ui);letter-spacing:.14em;
+    color:var(--ink-soft);text-transform:uppercase;}
+  h1{margin:6px 0 2px;font:var(--font-display);font-size:clamp(30px,9vw,36px);
+    letter-spacing:.01em;text-transform:uppercase;color:var(--ridge);text-wrap:balance;}
+  .subtitle{margin:0 0 14px;font:600 13px/1.3 var(--font-ui);color:var(--ink-soft);}
+  .status-row{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1;}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;
+    font:700 11.5px/1 var(--font-ui);letter-spacing:.02em;border:1px solid var(--line);
+    background:var(--surface);color:var(--ink);}
+  .pill.countdown{background:var(--ridge);color:var(--bg);border-color:var(--ridge);}
+  :root[data-theme="dark"] .pill.countdown, @media (prefers-color-scheme:dark){.pill.countdown{color:var(--bg);}}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.6;}
+
+  /* ---------- content / tabs ---------- */
+  .content{flex:1;padding:18px 16px 100px;position:relative;z-index:1;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){.tab-panel.active{animation:none;}}
+
+  h2.section-title{margin:0 0 4px;font:800 12px/1 var(--font-ui);letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-soft);}
+  h2.section-title.first{margin-top:0;}
+  .section-title{margin-top:26px;}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    padding:14px;margin-bottom:10px;}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    padding:12px 8px;text-align:center;}
+  .stat b{display:block;font:800 22px/1 var(--font-mono);font-variant-numeric:tabular-nums;
+    color:var(--ridge);}
+  .stat span{display:block;margin-top:4px;font:700 9.5px/1.2 var(--font-ui);
+    letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+
+  .banner{border:1px solid var(--ember);border-left-width:4px;border-radius:6px;
+    background:var(--surface);padding:12px 14px;margin-bottom:10px;}
+  .banner b{display:block;font:800 11px/1 var(--font-ui);letter-spacing:.08em;
+    text-transform:uppercase;color:var(--ember);margin-bottom:6px;}
+  .banner ul{margin:0;padding-left:18px;font:14px/1.5 var(--font-body);color:var(--ink);}
+  .banner li{margin-bottom:4px;}
+
+  .booking{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+    padding:12px 0;border-bottom:1px solid var(--line);}
+  .booking:last-child{border-bottom:none;}
+  .booking .name{font:700 14px/1.3 var(--font-ui);color:var(--ink);}
+  .booking .meta{font:13px/1.5 var(--font-body);color:var(--ink-soft);margin-top:2px;}
+  .booking .conf{font:12px var(--font-mono);color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;}
+  .status-ok{font:800 10px/1 var(--font-ui);letter-spacing:.05em;text-transform:uppercase;
+    color:var(--ridge);white-space:nowrap;}
+
+  .crew-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;
+    border-bottom:1px solid var(--line);}
+  .crew-row:last-child{border-bottom:none;}
+  .crew-name{font:700 14px var(--font-ui);}
+  .crew-house{font:10px var(--font-ui);letter-spacing:.05em;text-transform:uppercase;
+    color:var(--ink-soft);}
+  .crew-note{font:13px/1.4 var(--font-body);color:var(--ink-soft);max-width:60%;
+    text-align:right;}
+
+  /* ---------- day strip / cards ---------- */
+  .day-strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:4px;
+    -webkit-overflow-scrolling:touch;}
+  .day-chip{flex:0 0 auto;padding:8px 10px;border-radius:8px;background:var(--surface);
+    border:1px solid var(--line);text-align:center;cursor:pointer;font:var(--font-ui);}
+  .day-chip .d{display:block;font:800 11px var(--font-mono);color:var(--ink-soft);}
+  .day-chip .n{display:block;font:800 16px var(--font-mono);color:var(--ridge);}
+  .day-chip.current{background:var(--ridge);border-color:var(--ridge);}
+  .day-chip.current .d,.day-chip.current .n{color:var(--bg);}
+
+  .day-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    margin-bottom:8px;overflow:hidden;}
+  .day-head{display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:13px 14px;cursor:pointer;background:none;border:none;width:100%;
+    font:inherit;color:inherit;text-align:left;}
+  .day-head .titles{display:flex;flex-direction:column;gap:2px;}
+  .day-head .dow{font:800 10px var(--font-ui);letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-soft);}
+  .day-head .ttl{font:700 15px var(--font-ui);color:var(--ink);}
+  .day-head .site{font:12px var(--font-body);color:var(--ink-soft);margin-top:1px;}
+  .chev{width:10px;height:10px;border-right:2px solid var(--ink-soft);
+    border-bottom:2px solid var(--ink-soft);transform:rotate(45deg);transition:transform .2s;
+    flex:0 0 auto;}
+  .day-card.open .chev{transform:rotate(-135deg);}
+  .day-body{max-height:0;overflow:hidden;transition:max-height .28s ease;}
+  .day-card.open .day-body{max-height:900px;}
+  @media (prefers-reduced-motion:reduce){.day-body{transition:none;}}
+  .day-body-inner{padding:0 14px 14px;}
+  .blk{margin-top:10px;}
+  .blk-label{font:800 10px var(--font-ui);letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:5px;}
+  .chiplist{display:flex;flex-wrap:wrap;gap:6px;}
+  .achip{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:6px;
+    background:var(--surface-2);font:12.5px var(--font-ui);color:var(--ink);}
+  .achip .blaze{width:6px;height:11px;border-radius:1px;flex:0 0 auto;}
+  .meal-line{display:flex;justify-content:space-between;font:13.5px/1.5 var(--font-body);
+    padding:2px 0;}
+  .meal-line span:first-child{color:var(--ink-soft);font-family:var(--font-ui);
+    font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+    padding-top:2px;}
+  .notes{font:14px/1.6 var(--font-body);color:var(--ink);}
+
+  /* ---------- lists tab ---------- */
+  .seg{display:flex;gap:6px;margin-bottom:14px;background:var(--surface-2);padding:4px;
+    border-radius:9px;}
+  .seg button{flex:1;padding:8px 4px;border:none;border-radius:6px;background:none;
+    font:700 12.5px var(--font-ui);color:var(--ink-soft);cursor:pointer;}
+  .seg button.active{background:var(--surface);color:var(--ridge);box-shadow:var(--shadow);}
+  .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .filt{padding:5px 10px;border-radius:999px;border:1px solid var(--line);
+    background:var(--surface);font:700 11px var(--font-ui);color:var(--ink-soft);
+    cursor:pointer;display:flex;align-items:center;gap:6px;}
+  .filt.on{border-color:currentColor;}
+  .filt .sw{width:8px;height:8px;border-radius:2px;}
+
+  .act-row{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);}
+  .act-row:last-child{border-bottom:none;}
+  .act-row .blaze{width:5px;border-radius:2px;flex:0 0 auto;align-self:stretch;}
+  .act-main{flex:1;min-width:0;}
+  .act-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
+  .act-name{font:700 14px var(--font-ui);color:var(--ink);}
+  .act-rating{font:12px var(--font-mono);color:var(--ink-soft);white-space:nowrap;
+    font-variant-numeric:tabular-nums;}
+  .act-area{font:11.5px var(--font-ui);color:var(--gold);font-weight:700;margin-top:2px;}
+  .act-note{font:13px/1.5 var(--font-body);color:var(--ink-soft);margin-top:3px;}
+  .act-badge{display:inline-block;margin-top:5px;font:700 10px var(--font-ui);
+    letter-spacing:.03em;color:var(--ember);}
+
+  .food-group h3, .gear-group h3{font:700 13px var(--font-ui);color:var(--ridge);
+    margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line);}
+  .food-item{font:14px/1.5 var(--font-body);padding:5px 0;color:var(--ink);}
+  .gear-item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+    padding:9px 0;border-bottom:1px solid var(--line);}
+  .gear-group{margin-bottom:18px;}
+  .gear-item:last-child{border-bottom:none;}
+  .gear-name{font:700 13.5px var(--font-ui);}
+  .gear-meta{font:12px/1.4 var(--font-body);color:var(--ink-soft);}
+  .packbtn{flex:0 0 auto;padding:5px 10px;border-radius:999px;border:1px solid var(--line);
+    background:var(--surface-2);font:700 10.5px var(--font-ui);letter-spacing:.03em;
+    text-transform:uppercase;color:var(--ink-soft);cursor:pointer;}
+  .packbtn.done{background:var(--ridge);border-color:var(--ridge);color:var(--bg);}
+  .local-note{font:12px/1.5 var(--font-body);color:var(--ink-soft);font-style:italic;
+    margin:-4px 0 14px;}
+
+  /* ---------- money tab ---------- */
+  .money-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;}
+  .money-stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    padding:12px 8px;text-align:center;}
+  .money-stat b{display:block;font:800 15px var(--font-mono);color:var(--ridge);
+    font-variant-numeric:tabular-nums;}
+  .money-stat span{display:block;margin-top:3px;font:700 9px var(--font-ui);
+    letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);}
+  .cat-row{margin-bottom:10px;}
+  .cat-top{display:flex;justify-content:space-between;font:12.5px var(--font-ui);
+    margin-bottom:4px;}
+  .cat-top b{font-family:var(--font-mono);font-variant-numeric:tabular-nums;color:var(--ink);}
+  .cat-bar{height:7px;border-radius:4px;background:var(--surface-2);overflow:hidden;}
+  .cat-bar i{display:block;height:100%;background:var(--gold);border-radius:4px;}
+  .exp-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;
+    border-bottom:1px solid var(--line);}
+  .exp-row:last-child{border-bottom:none;}
+  .exp-desc{font:700 13.5px var(--font-ui);}
+  .exp-meta{font:11.5px var(--font-ui);color:var(--ink-soft);margin-top:2px;}
+  .exp-amt{font:800 14px var(--font-mono);font-variant-numeric:tabular-nums;
+    white-space:nowrap;color:var(--ink);}
+
+  /* ---------- tab bar ---------- */
+  .tabbar{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;
+    max-width:480px;display:flex;background:var(--surface);border-top:1px solid var(--line);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:2;
+    backdrop-filter:blur(10px);}
+  .tabbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    background:none;border:none;padding:6px 2px;color:var(--ink-soft);cursor:pointer;
+    font:700 10px var(--font-ui);letter-spacing:.02em;}
+  .tabbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .tabbtn.active{color:var(--ridge);}
+  .footer-note{margin:20px 0 0;font:12px/1.6 var(--font-body);color:var(--ink-soft);
+    text-align:center;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--ember);outline-offset:2px;}
+</style>
+
+<div class="topo-bg" id="topoBg"></div>
+<div class="shell">
+
+  <header class="appbar">
+    <svg class="ridge-line" viewBox="0 0 400 46" preserveAspectRatio="none">
+      <path pathLength="1" d="M0,40 L36,18 L64,30 L96,8 L128,26 L162,14 L196,34 L228,16 L262,29 L296,10 L332,24 L366,13 L400,22"/>
+    </svg>
+    <p class="eyebrow">HKS Adventure Squad</p>
+    <h1>Trailhead</h1>
+    <p class="subtitle">Smoky Mountains 2026 · Aug 15–23 · Hudson WI → Asheville NC → Gatlinburg TN → Hudson WI</p>
+    <div class="status-row">
+      <span class="pill countdown" id="countdownPill"><span class="dot"></span><span id="countdownText">—</span></span>
+      <span class="pill">Synced Aug 11, 2026</span>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <!-- OVERVIEW -->
+    <section id="tab-overview" class="tab-panel active">
+      <h2 class="section-title first">Trip at a glance</h2>
+      <div class="stat-grid">
+        <div class="stat"><b>8</b><span>Trip Days</span></div>
+        <div class="stat"><b>5</b><span>People</span></div>
+        <div class="stat"><b>2</b><span>Households</span></div>
+        <div class="stat"><b>7</b><span>Nights Out</span></div>
+        <div class="stat"><b>2</b><span>Sites Booked</span></div>
+        <div class="stat"><b id="statActivities">–</b><span>On Activity List</span></div>
+      </div>
+
+      <h2 class="section-title">Still open</h2>
+      <div class="banner">
+        <b>Time-sensitive</b>
+        <ul>
+          <li>CLIMB Works Zipline — listed on both Aug 21 &amp; Aug 22, not booked, sells out. Pick a day and lock it.</li>
+          <li>Kuwohi timed-entry permit — required via recreation.gov for Aug 21, not yet booked.</li>
+        </ul>
+      </div>
+
+      <h2 class="section-title">Bookings</h2>
+      <div class="card" id="bookingsCard"></div>
+
+      <h2 class="section-title">Crew</h2>
+      <div class="card" id="crewCard"></div>
+
+      <p class="footer-note">Read from the master planning sheet. Ask Claude to refresh this page after the sheet changes — it doesn't update itself.</p>
+    </section>
+
+    <!-- DAYS -->
+    <section id="tab-days" class="tab-panel">
+      <h2 class="section-title first">Nine days, one RV</h2>
+      <div class="day-strip" id="dayStrip"></div>
+      <div id="dayCards"></div>
+    </section>
+
+    <!-- LISTS -->
+    <section id="tab-lists" class="tab-panel">
+      <h2 class="section-title first">Lists</h2>
+      <div class="seg" id="listSeg">
+        <button data-list="activities" class="active">Activities</button>
+        <button data-list="food">Food</button>
+        <button data-list="gear">Gear</button>
+      </div>
+      <div id="listActivities">
+        <div class="filters" id="actFilters"></div>
+        <div class="card" id="actList"></div>
+      </div>
+      <div id="listFood" style="display:none;" id="foodWrap">
+        <div id="foodGroups"></div>
+      </div>
+      <div id="listGear" style="display:none;">
+        <p class="local-note">Tap an item to mark it packed — saved on this phone only, doesn't write back to the sheet.</p>
+        <div id="gearGroups"></div>
+      </div>
+    </section>
+
+    <!-- MONEY -->
+    <section id="tab-money" class="tab-panel">
+      <h2 class="section-title first">Shared expenses</h2>
+      <div class="money-stats">
+        <div class="money-stat"><b>$5,108.89</b><span>Total</span></div>
+        <div class="money-stat"><b>$707.31</b><span>Heintz Paid</span></div>
+        <div class="money-stat"><b>$4,401.58</b><span>Kubner Paid</span></div>
+      </div>
+      <h2 class="section-title">By category</h2>
+      <div class="card" id="catCard"></div>
+      <h2 class="section-title">Line items</h2>
+      <div class="card" id="expCard"></div>
+    </section>
+
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="tabbtn active" data-tab="overview">
+      <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9h14v-9"/></svg>
+      Overview
+    </button>
+    <button class="tabbtn" data-tab="days">
+      <svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>
+      Days
+    </button>
+    <button class="tabbtn" data-tab="lists">
+      <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.3"/><circle cx="4" cy="12" r="1.3"/><circle cx="4" cy="18" r="1.3"/></svg>
+      Lists
+    </button>
+    <button class="tabbtn" data-tab="money">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.5 9.7c0-1.2 1.1-2 2.5-2s2.5.8 2.5 1.9c0 2.6-5 1.3-5 3.9 0 1.1 1.1 1.9 2.5 1.9s2.5-.8 2.5-2"/></svg>
+      Money
+    </button>
+  </nav>
+</div>
+
+<script>
+(function(){
+  // ---------- topo background ----------
+  var topoSvg = '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><pattern id="topo" width="220" height="140" patternUnits="userSpaceOnUse">' +
+    '<path d="M0,30 Q55,5 110,30 T220,30" fill="none" stroke="var(--topo)" stroke-width="1.5"/>' +
+    '<path d="M0,65 Q55,40 110,65 T220,65" fill="none" stroke="var(--topo)" stroke-width="1.5"/>' +
+    '<path d="M0,100 Q55,75 110,100 T220,100" fill="none" stroke="var(--topo)" stroke-width="1.5"/>' +
+    '<path d="M0,135 Q55,110 110,135 T220,135" fill="none" stroke="var(--topo)" stroke-width="1.5"/>' +
+    '</pattern></defs>' +
+    '<rect width="100%" height="100%" fill="url(#topo)"/></svg>';
+  document.getElementById('topoBg').innerHTML = topoSvg;
+
+  // ---------- countdown ----------
+  function updateCountdown(){
+    var now = new Date();
+    var start = new Date(2026,7,15,0,0,0);
+    var end = new Date(2026,7,23,23,59,59);
+    var el = document.getElementById('countdownText');
+    if(now < start){
+      var days = Math.ceil((start-now)/86400000);
+      el.textContent = 'T-minus ' + days + (days===1?' day':' days') + ' to launch';
+    } else if(now <= end){
+      var dayNum = Math.floor((now-start)/86400000) + 1;
+      el.textContent = 'Day ' + dayNum + ' of 8 — on the road';
+    } else {
+      el.textContent = 'Trip complete — see you in 2027';
+    }
+  }
+  updateCountdown();
+
+  // ---------- data ----------
+  var BLAZE = {'Must Do':'var(--ember)','Want To':'var(--gold)','If Time':'var(--ridge)'};
+
+  var bookings = [
+    {name:'North Mills River Campground', conf:'#894556913', when:'Aug 17, 2:00 PM → Aug 19, noon',
+     meta:'$100 · paid · electric site, North Loop 014, 33 min south of Asheville, no cell service', status:'PAID'},
+    {name:'Camp LeConte Luxury Outdoor Resort', conf:'#789796', when:'Aug 19, 3:00 PM → Aug 21, noon',
+     meta:'$254.19 total · $129.32 deposit paid, balance due · full hookups, 4 mi to downtown Gatlinburg', status:'DEPOSIT'},
+    {name:'Biltmore Estate', conf:'House tour', when:'Aug 18, 11:00 AM (arrive 45 min early)',
+     meta:'$353.12 · paid in full · wines are a thing there', status:'CONFIRMED'}
+  ];
+  var bc = document.getElementById('bookingsCard');
+  bookings.forEach(function(b,i){
+    bc.innerHTML += '<div class="booking"><div><div class="name">'+b.name+'</div>' +
+      '<div class="meta">'+b.when+'</div><div class="meta">'+b.meta+'</div></div>' +
+      '<div style="text-align:right;"><div class="status-ok">'+b.status+'</div>' +
+      '<div class="conf">'+b.conf+'</div></div></div>';
+  });
+
+  var crew = [
+    {name:'Daniel Heintz', house:'Team Heintz', note:'all good, except balls and brains'},
+    {name:'Krisit Heintz', house:'Team Heintz', note:'prefers vegetarian, down with wiggle-free flesh if culturally significant'},
+    {name:'Jakob Heintz', house:'Team Heintz', note:'no mushrooms'},
+    {name:'Angelique Kube', house:'Team Kubner', note:'not a fan of fish or large chunks of meat'},
+    {name:'Brady Scribner', house:'Team Kubner', note:'allergic to triflin bitches'}
+  ];
+  var cc = document.getElementById('crewCard');
+  crew.forEach(function(p){
+    cc.innerHTML += '<div class="crew-row"><div><div class="crew-name">'+p.name+'</div>' +
+      '<div class="crew-house">'+p.house+'</div></div><div class="crew-note">'+p.note+'</div></div>';
+  });
+
+  var days = [
+    {dow:'Sat', date:'Aug 15', title:'Load Day', site:'RV pickup — no campsite',
+     acts:[{n:'Pepper Fest',p:'If Time'}], meals:{}, notes:'RV pickup, packing, and staging. Team dinner at Pepper Fest to kick things off.'},
+    {dow:'Sun', date:'Aug 16', title:'Travel Day — Southbound', site:'Rest Area',
+     acts:[{n:'Kankakee Rest Area SB',p:'Want To'},{n:'Henryville Rest Area SB',p:'Want To'},{n:'Lebanon Rest Area SB',p:'Want To'}],
+     meals:{}, notes:'Long haul — rotate drivers, stay hydrated, stop every 2–3 hours. Road snacks are a serious category. Arrive Louisville area by evening for a real overnight rest before the final push to Asheville Sunday morning.'},
+    {dow:'Mon', date:'Aug 17', title:'Asheville — Arrival', site:'North Mills River · #894556913',
+     acts:[{n:'River Arts District',p:'Must Do'},{n:'Hi-Wire Brewing',p:'Must Do'},{n:'The Fox and The Apple',p:'Must Do'}],
+     meals:{}, notes:'Half drive day, half first taste of Asheville. RAD is the priority, build the rest of the day around it. The Fox and The Apple has a perfect rating, don’t skip it.'},
+    {dow:'Tue', date:'Aug 18', title:'Asheville — Biltmore Day', site:'North Mills River · #894556913',
+     acts:[{n:'Biltmore · 11:00 tour, confirmed',p:'Must Do'},{n:'Looking Glass Falls',p:'Must Do'}],
+     meals:{Breakfast:'Dutch babies and bacon'}, notes:'Wines are a thing at Biltmore. Looking Glass Falls is a quick roadside stop on the way out of Asheville or back from Biltmore.'},
+    {dow:'Wed', date:'Aug 19', title:'Smokies — Arrival + Grotto Falls', site:'Camp LeConte · #789796',
+     acts:[{n:'Sugarlands Visitor Center',p:'Want To'},{n:'Grotto Falls',p:'Must Do'}],
+     meals:{Breakfast:'French toast and sausage'}, notes:'Asheville to Gatlinburg is about 2.5 hrs. Leave mid-morning for a full afternoon in the park. Grotto Falls is the perfect arrival hike — low effort, you walk behind the waterfall. Park in AM to avoid afternoon parking wars.'},
+    {dow:'Thu', date:'Aug 20', title:'Smokies — Alum Cave Trail', site:'Camp LeConte · #789796',
+     acts:[{n:'Alum Cave Trail',p:'Must Do'},{n:'Arch Rock',p:'Want To'},{n:'Forbidden Caverns',p:'Want To'}],
+     meals:{Breakfast:'Breakfast scramble', Lunch:'Trail packed lunch', Dinner:'Korean beef tacos + cilantro lime rice'},
+     notes:'Parking at Alum Cave fills fast — be there before 9 AM or you’re hiking from the road. Pack trail lunch the night before. Forbidden Caverns is a solid PM backup if afternoon storms roll in (they usually do in August).'},
+    {dow:'Fri', date:'Aug 21', title:'Smokies — Kuwohi Summit', site:'Camp LeConte · #789796 · checkout noon',
+     acts:[{n:'Kuwohi Observation Deck',p:'Must Do'},{n:'Cades Cove',p:'Want To'},{n:'CLIMB Works Zipline (unbooked)',p:'Want To'}],
+     meals:{Breakfast:'Breakfast burritos', Dinner:'Homemade pizza'},
+     notes:'Bring layers for Kuwohi — 20°F cooler at the summit. Permit required via recreation.gov, book it. Cades Cove crowds are no joke, early or late only. CLIMB Works is optional here if not saved for Aug 22 AM.'},
+    {dow:'Sat', date:'Aug 22', title:'Travel Day — Northbound', site:'Rest Area',
+     acts:[{n:'CLIMB Works Zipline (unbooked)',p:'Want To'},{n:'Taco Temple',p:'Want To'},{n:'Manhattan Project NHP',p:'If Time'}],
+     meals:{Breakfast:'Bloody mary fixings', Lunch:'Taco Temple'},
+     notes:'Manhattan Project NHP is a 30-min I-40 detour, genuinely worth it if energy is there. Taco Temple is a legitimate lunch stop, not just a gas station grab. Bloody mary bar for the final RV breakfast is non-negotiable.'},
+    {dow:'Sun', date:'Aug 23', title:'Home — RV Return', site:'—',
+     acts:[], meals:{}, notes:'Clean the RV before you get back, rental companies are watching. Welcome home dinner is mandatory. Unanimous squad rule: debrief at the table, vote on 2027 destination before anyone goes home. S’mores were non-negotiable.'}
+  ];
+
+  var strip = document.getElementById('dayStrip');
+  var cardsWrap = document.getElementById('dayCards');
+  var now = new Date();
+  var openIndex = 0;
+  days.forEach(function(d,i){
+    var dCheck = new Date(2026,7,15+i,12);
+    if(dCheck <= now) openIndex = Math.min(i+1, days.length-1);
+  });
+  if(now < new Date(2026,7,15)) openIndex = 0;
+
+  days.forEach(function(d,i){
+    var chip = document.createElement('div');
+    chip.className = 'day-chip' + (i===openIndex?' current':'');
+    chip.innerHTML = '<span class="d">'+d.dow+'</span><span class="n">'+d.date.replace('Aug ','')+'</span>';
+    chip.addEventListener('click', function(){
+      document.getElementById('daycard-'+i).scrollIntoView({behavior:'smooth', block:'center'});
+      setOpen(i, true);
+    });
+    strip.appendChild(chip);
+
+    var card = document.createElement('div');
+    card.className = 'day-card' + (i===openIndex?' open':'');
+    card.id = 'daycard-'+i;
+    var actsHtml = d.acts.map(function(a){
+      return '<span class="achip"><span class="blaze" style="background:'+BLAZE[a.p]+'"></span>'+a.n+'</span>';
+    }).join('');
+    var mealsHtml = Object.keys(d.meals).map(function(k){
+      return '<div class="meal-line"><span>'+k+'</span><span>'+d.meals[k]+'</span></div>';
+    }).join('');
+    card.innerHTML =
+      '<button class="day-head" onclick="window.__toggleDay('+i+')">' +
+        '<div class="titles"><div class="dow">'+d.dow+', '+d.date+'</div>' +
+          '<div class="ttl">'+d.title+'</div><div class="site">'+d.site+'</div></div>' +
+        '<span class="chev"></span></button>' +
+      '<div class="day-body"><div class="day-body-inner">' +
+        (actsHtml ? '<div class="blk"><div class="blk-label">Activities</div><div class="chiplist">'+actsHtml+'</div></div>' : '') +
+        (mealsHtml ? '<div class="blk"><div class="blk-label">Meals</div>'+mealsHtml+'</div>' : '') +
+        '<div class="blk"><div class="blk-label">Notes</div><div class="notes">'+d.notes+'</div></div>' +
+      '</div></div>';
+    cardsWrap.appendChild(card);
+  });
+
+  window.__toggleDay = function(i){ setOpen(i, !document.getElementById('daycard-'+i).classList.contains('open')); };
+  function setOpen(i, val){
+    var el = document.getElementById('daycard-'+i);
+    if(val) el.classList.add('open'); else el.classList.remove('open');
+  }
+
+  // ---------- activities ----------
+  var activities = [
+    ['CLIMB Works — Zipline Tour','Adventure/Zipline',5.0,7640,'Gatlinburg TN','Book in advance. Highest-reviewed attraction on the list.','Want To','Yes — Book Ahead'],
+    ['Foxfire Adventure Park','Adventure/Zipline',4.7,1948,'Gatlinburg TN','Ropes, zip lines, adventure park. Good half-day.','Want To','Yes — Book Ahead'],
+    ['Forbidden Caverns','Cave/Underground',4.7,3222,'Sevierville TN','Cool underground caves. Great rain-day backup.','Want To',''],
+    ['Alum Cave Trail','Hiking',4.9,257,'GSMNP — TN','Moderate-strenuous. Start before 9 AM — parking fills fast.','Must Do',''],
+    ['Arch Rock','Hiking',4.8,176,'GSMNP — TN','Natural arch on Alum Cave Trail. Not a separate hike — milestone stop.','Want To',''],
+    ['Grotto Falls','Hiking',4.8,1670,'GSMNP — TN','2.6 mi round trip. Walk behind the falls. Accessible.','Must Do',''],
+    ['Cades Cove','Scenic/Summit',4.7,3949,'GSMNP — TN','11-mile scenic loop. Wildlife common. Arrive early or late to beat crowds.','Want To',''],
+    ['Kuwohi Observation Deck','Scenic/Summit',4.8,3430,'GSMNP — TN/NC','Highest point in Smokies, 6,643 ft. Bring layers — 20°F cooler at top.','Must Do','Permit Required'],
+    ['Mt Le Conte','Scenic/Summit',4.9,401,'GSMNP — TN','Third highest peak. Full-day via multiple trails.','Want To',''],
+    ['Looking Glass Falls','Waterfall',4.8,4151,'Pisgah NF, NC','60-ft falls, roadside accessible. Easy. Near Asheville.','Must Do',''],
+    ['Whitewater Falls','Waterfall',4.9,2060,'Nantahala NF, NC','411 ft — one of tallest in eastern US. Worth the detour.','Want To',''],
+    ['Biltmore','Museum/History',4.7,39254,'Asheville NC','America’s largest private home. Book tickets well in advance.','Must Do','Yes — Book Ahead'],
+    ['Manhattan Project NHP','Museum/History',4.3,223,'Oak Ridge TN','WWII atomic bomb site. Deliberate detour off I-40 on drive home.','If Time',''],
+    ['Mountain Farm Museum','Museum/History',4.8,457,'GSMNP — NC','19th-century Appalachian farm. Free. Next to Oconaluftee VC.','Want To',''],
+    ['Mingus Mill','Museum/History',4.8,1551,'GSMNP — NC','Historic 1886 grist mill, still operational. Free.','Want To',''],
+    ['Sugarlands Visitor Center','Museum/History',4.7,2195,'GSMNP — TN','Main TN park entrance. Good orientation stop.','Want To',''],
+    ['Oconaluftee Visitor Center','Museum/History',4.8,8447,'GSMNP — NC','Main NC park entrance. Adjacent to Mountain Farm Museum.','Want To',''],
+    ['Kuwohi Visitor Center','Museum/History',4.8,3389,'GSMNP — TN/NC','Base of Clingmans Dome road.','If Time',''],
+    ['River Arts District','Town/Area',null,null,'Asheville NC','Studios, galleries, breweries. Plan 2–3 hrs. Walk from Hi-Wire.','Must Do',''],
+    ['Gatlinburg','Town/Area',null,null,'Gatlinburg TN','Gateway town. Shops, food, park access.','Want To',''],
+    ['Hi-Wire Brewing','Food & Drink',4.8,229,'Asheville NC','Outdoor beer garden in River Arts District. Food trucks on site.','Must Do',''],
+    ['The Fox and The Apple','Food & Drink',5.0,15,'Asheville NC','Craft cider bar. Perfect 5.0 rating.','Must Do',''],
+    ['Taco Temple','Food & Drink',4.6,1969,'Maryville TN','Local Mexican near Smokies south entrance. Good lunch stop.','Want To',''],
+    ['Kankakee Rest Area SB','Rest Stop',4.9,91,'I-57 SB, Illinois','First major rest stop heading south from Hudson.','Want To',''],
+    ['Henryville Rest Area SB','Rest Stop',4.3,1803,'I-65 SB, Indiana','Second southbound rest stop.','Want To',''],
+    ['Lebanon Rest Area SB','Rest Stop',3.8,1310,'I-65 SB, Indiana','Third southbound stop before Louisville.','Want To',''],
+    ['Mammoth Cave','Cave/Underground',4.7,4500,'Cave City KY','Longest cave system in the world.','Want To','Yes — Book Ahead'],
+    ['Blue Ridge Parkway','Scenic/Summit',4.9,12000,'NC/VA','Scenic drive with spectacular views.','Want To',''],
+    ['Museum of the Cherokee People','Museum/History',4.6,1200,'Cherokee NC','Living culture and history of the Cherokee people.','Want To',''],
+    ['Asheville Botanical Garden','Other',4.5,850,'Asheville NC','10-acre garden featuring native plants. Free admission.','Want To',''],
+    ['Alcatraz East Crime Museum','Museum/History',4.5,3500,'Pigeon Forge TN','True crime museum with interactive exhibits.','Want To',''],
+    ['Salt & Pepper Shaker Museum','Museum/History',4.7,2100,'Gatlinburg TN','Quirky museum, 20,000+ pairs of shakers, $3 admission.','Must Do',''],
+    ['Chimney Tops','Hiking',4.7,1800,'GSMNP — TN','Steep 3.3 mile hike — summit closed due to fire damage.','Want To',''],
+    ['Pepper Fest','Food & Drink',null,null,'North Hudson, WI','Three-day Italian-heritage festival — food, beer garden, parade.','If Time',''],
+    ['Great Smoky Arts & Crafts Community','Town/Area',4.6,3000,'Gatlinburg TN','8-mile loop, 100+ local artisans and craftsmen.','Want To','']
+  ];
+  document.getElementById('statActivities').textContent = activities.length;
+
+  var actState = {'Must Do':true,'Want To':true,'If Time':true};
+  var filtWrap = document.getElementById('actFilters');
+  Object.keys(BLAZE).forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'filt on';
+    b.style.color = BLAZE[p];
+    b.innerHTML = '<span class="sw" style="background:'+BLAZE[p]+'"></span>'+p;
+    b.addEventListener('click', function(){
+      actState[p] = !actState[p];
+      b.classList.toggle('on', actState[p]);
+      renderActivities();
+    });
+    filtWrap.appendChild(b);
+  });
+
+  function renderActivities(){
+    var wrap = document.getElementById('actList');
+    wrap.innerHTML = '';
+    activities.filter(function(a){ return actState[a[6]]; }).forEach(function(a){
+      var row = document.createElement('div');
+      row.className = 'act-row';
+      row.innerHTML =
+        '<div class="blaze" style="background:'+BLAZE[a[6]]+'"></div>' +
+        '<div class="act-main"><div class="act-top"><span class="act-name">'+a[0]+'</span>' +
+        (a[2] ? '<span class="act-rating">★'+a[2].toFixed(1)+' · '+a[3].toLocaleString()+'</span>' : '') +
+        '</div><div class="act-area">'+a[4]+'</div><div class="act-note">'+a[5]+'</div>' +
+        (a[7] ? '<div class="act-badge">'+a[7]+'</div>' : '') + '</div>';
+      wrap.appendChild(row);
+    });
+  }
+  renderActivities();
+
+  // ---------- food ----------
+  var food = {
+    'Breakfast':['Protein bars/shakes','Dutch babies and bacon','French toast and sausage','Breakfast Burritos','Breakfast scramble','Waffles and meats','Breakfast sandwiches'],
+    'Camp Dinner':['Zatarains and Andouille','Korean beef tacos','Cilantro lime rice','Homemade pizza','Spaghetti and meatballs','Loaded baked potato soup','Baked brie','Grilled cheese sammiches'],
+    'Lunch / Road Food':['Summer sausage sandwiches','Baby carrots with hummus','Trail packed lunch','Tuna pita','Gas station hot dogs and roadies'],
+    'Snacks':['Meatses and Cheeses','Trail mix','Meat and cheese board','Charcuterie board','S’mores','Clementines','Rice crispy treats','Pistachios','Pickles','Barushka / pasties'],
+    'Beverages':['Coffee and tea','Beer','Wine','THC beverages (WI legal — confirm TN law)','Bloody mary fixings','Sparkling water'],
+    'Restaurant stops':['Taco Temple','Hi-Wire Brewing','The Fox and The Apple','Asheville dinner — TBD']
+  };
+  var foodWrap = document.getElementById('foodGroups');
+  Object.keys(food).forEach(function(cat){
+    var g = document.createElement('div');
+    g.className = 'food-group card';
+    g.innerHTML = '<h3>'+cat+'</h3>' + food[cat].map(function(f){
+      return '<div class="food-item">'+f+'</div>';
+    }).join('');
+    foodWrap.appendChild(g);
+  });
+
+  // ---------- gear ----------
+  var gear = {
+    'Outdoor / Camping':[
+      ['Camp chairs','Both/Share · 5 · one per person'],['Headlamps','Both/Share · 5 · one per person'],
+      ['Fire starters / lighter','Both/Share · 2'],['Bug spray / DEET','Both/Share · 2'],
+      ['Sunscreen','Both/Share · 2'],['Rain gear / ponchos','Both/Share · 5 · one per person'],
+      ['Hiking boots / shoes','Each packs own'],['Day packs / hydration packs','Both/Share · 5'],
+      ['Hammock','1'],['Trekking poles','optional'],['Fishing poles / gear','Team Heintz'],
+      ['Clothes line (for drying)','Both/Share'],['RV entrance rug','Both/Share'],
+      ['Glamping lights, Lucy, etc.',''],['Thermacell / repellent candles','']
+    ],
+    'Kitchen / Cooking':[
+      ['Cooler (large)','Both/Share'],['Cast iron skillet','for Dutch babies'],
+      ['Cooking utensil set','Both/Share'],['Cutting board','Both/Share'],['Chef knife',''],
+      ['Dish soap / scrubber','Both/Share'],['Tin foil','Both/Share'],
+      ['Ziploc bags, assorted','Both/Share'],['Paper plates / bowls','Both/Share']
+    ],
+    'Navigation / Safety':[
+      ['First aid kit','Both/Share'],['Emergency contact list','printed'],
+      ['NPS permits (printed)','Kuwohi timed entry'],['Offline maps (downloaded)','on phones']
+    ],
+    'RV / Vehicle':[['Jumper cables','RV provided — confirm with rental']],
+    'Games / Entertainment':[
+      ['Bluetooth speaker','Kubners'],['Walkie-talkies','Both/Share'],['Card games',''],['Board game','']
+    ],
+    'Personal':[
+      ['Clothing (5+ days)','each packs own'],['Swimwear',''],['Towels',''],['Toiletries',''],
+      ['Medications / prescriptions',''],['Phone charger / power bank',''],['ID / passport',''],
+      ['Portable generator(s)',''],['Small fans','Team Heintz has 2 — 1 battery, 1 plug']
+    ]
+  };
+  var gearWrap = document.getElementById('gearGroups');
+  var packKey = 'hksas-packed';
+  var packed = {};
+  try{ packed = JSON.parse(localStorage.getItem(packKey) || '{}'); }catch(e){ packed = {}; }
+  Object.keys(gear).forEach(function(cat){
+    var g = document.createElement('div');
+    g.className = 'gear-group card';
+    var rows = gear[cat].map(function(item, idx){
+      var id = cat+'::'+item[0];
+      var isPacked = !!packed[id];
+      return '<div class="gear-item"><div><div class="gear-name">'+item[0]+'</div>' +
+        (item[1] ? '<div class="gear-meta">'+item[1]+'</div>' : '') + '</div>' +
+        '<button class="packbtn'+(isPacked?' done':'')+'" data-id="'+id.replace(/"/g,'&quot;')+'">'+
+        (isPacked?'Packed':'Not yet')+'</button></div>';
+    }).join('');
+    g.innerHTML = '<h3>'+cat+'</h3>' + rows;
+    gearWrap.appendChild(g);
+  });
+  gearWrap.addEventListener('click', function(e){
+    var btn = e.target.closest('.packbtn');
+    if(!btn) return;
+    var id = btn.getAttribute('data-id');
+    packed[id] = !packed[id];
+    btn.classList.toggle('done', packed[id]);
+    btn.textContent = packed[id] ? 'Packed' : 'Not yet';
+    try{ localStorage.setItem(packKey, JSON.stringify(packed)); }catch(e){}
+  });
+
+  // ---------- money ----------
+  var categories = [['Activities',353.12],['RV Rental/Fees',4401.58],['RV Site Fee',354.19]];
+  var maxCat = Math.max.apply(null, categories.map(function(c){return c[1];}));
+  var catCard = document.getElementById('catCard');
+  categories.forEach(function(c){
+    catCard.innerHTML += '<div class="cat-row"><div class="cat-top"><span>'+c[0]+'</span>' +
+      '<b>$'+c[1].toLocaleString(undefined,{minimumFractionDigits:2})+'</b></div>' +
+      '<div class="cat-bar"><i style="width:'+(c[1]/maxCat*100)+'%"></i></div></div>';
+  });
+
+  var expenses = [
+    ['Half of RV rental','RV Rental/Fees','Team Kubner',1407.71,'Paid'],
+    ['RV protection','RV Rental/Fees','Team Kubner',1319.98,'Paid'],
+    ['Second half of RV rental','RV Rental/Fees','Team Kubner',1173.89,'Paid'],
+    ['RV usage deposit','RV Rental/Fees','Team Kubner',500.00,'Scheduled pmt 8/12'],
+    ['North Mills River site','RV Site Fee','Team Heintz',100.00,''],
+    ['Camp LeConte site','RV Site Fee','Team Heintz',254.19,'$129.32 deposit paid'],
+    ['Biltmore House & Grounds','Activities','Team Heintz',353.12,'']
+  ];
+  var expCard = document.getElementById('expCard');
+  expenses.forEach(function(e){
+    expCard.innerHTML += '<div class="exp-row"><div><div class="exp-desc">'+e[0]+'</div>' +
+      '<div class="exp-meta">'+e[2]+' · '+e[1]+(e[4]?' · '+e[4]:'')+'</div></div>' +
+      '<div class="exp-amt">$'+e[3].toLocaleString(undefined,{minimumFractionDigits:2})+'</div></div>';
+  });
+
+  // ---------- tabs ----------
+  var tabbar = document.getElementById('tabbar');
+  tabbar.addEventListener('click', function(e){
+    var btn = e.target.closest('.tabbtn');
+    if(!btn) return;
+    var tab = btn.getAttribute('data-tab');
+    document.querySelectorAll('.tabbtn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+    document.querySelectorAll('.tab-panel').forEach(function(p){
+      p.classList.toggle('active', p.id === 'tab-'+tab);
+    });
+    window.scrollTo({top:0, behavior:'instant'});
+  });
+
+  var seg = document.getElementById('listSeg');
+  seg.addEventListener('click', function(e){
+    var btn = e.target.closest('button');
+    if(!btn) return;
+    var which = btn.getAttribute('data-list');
+    seg.querySelectorAll('button').forEach(function(b){ b.classList.toggle('active', b===btn); });
+    document.getElementById('listActivities').style.display = which==='activities' ? '' : 'none';
+    document.getElementById('listFood').style.display = which==='food' ? '' : 'none';
+    document.getElementById('listGear').style.display = which==='gear' ? '' : 'none';
+  });
+})();
+</script>
